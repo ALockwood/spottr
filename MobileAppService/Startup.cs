@@ -39,7 +39,7 @@ namespace spottr.MobileAppService
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info { Title = "spottr API", Version = "v1" });
             });
         }
 
@@ -54,7 +54,7 @@ namespace spottr.MobileAppService
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "spottr API V1");
             });
 
             app.Run(async (context) => context.Response.Redirect("/swagger"));

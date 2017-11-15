@@ -14,19 +14,21 @@ namespace spottr.Droid
         /// </summary>
         protected override int LayoutResource => Resource.Layout.activity_item_details;
 
-        ItemDetailViewModel viewModel;
+        LoctionDetailViewModel viewModel;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             var data = Intent.GetStringExtra("data");
 
-            var item = Newtonsoft.Json.JsonConvert.DeserializeObject<Item>(data);
-            viewModel = new ItemDetailViewModel(item);
+            var location = Newtonsoft.Json.JsonConvert.DeserializeObject<Location>(data);
+            viewModel = new LoctionDetailViewModel(location);
 
-            FindViewById<TextView>(Resource.Id.description).Text = item.Description;
+            FindViewById<TextView>(Resource.Id.description).Text = location.Description;
+            FindViewById<TextView>(Resource.Id.lat_long).Text = location.LocationPoint;
+            FindViewById<TextView>(Resource.Id.date_updated).Text = location.LastUpdated;
 
-            SupportActionBar.Title = item.Text;
+            SupportActionBar.Title = location.Name;
         }
 
         protected override void OnStart()

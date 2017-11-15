@@ -18,7 +18,7 @@ namespace spottr.Droid
         SwipeRefreshLayout refresher;
 
         ProgressBar progress;
-        public static ItemsViewModel ViewModel { get; set; }
+        public static LocationsViewModel ViewModel { get; set; }
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -29,7 +29,7 @@ namespace spottr.Droid
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            ViewModel = new ItemsViewModel();
+            ViewModel = new LocationsViewModel();
 
             View view = inflater.Inflate(Resource.Layout.fragment_browse, container, false);
             var recyclerView =
@@ -54,8 +54,8 @@ namespace spottr.Droid
             refresher.Refresh += Refresher_Refresh;
             adapter.ItemClick += Adapter_ItemClick;
 
-            if (ViewModel.Items.Count == 0)
-                ViewModel.LoadItemsCommand.Execute(null);
+            if (ViewModel.Locations.Count == 0)
+                ViewModel.LoadLocationsCommand.Execute(null);
         }
 
         public override void OnStop()
@@ -67,7 +67,7 @@ namespace spottr.Droid
 
         void Adapter_ItemClick(object sender, RecyclerClickEventArgs e)
         {
-            var item = ViewModel.Items[e.Position];
+            var item = ViewModel.Locations[e.Position];
             var intent = new Intent(Activity, typeof(BrowseItemDetailActivity));
 
             intent.PutExtra("data", Newtonsoft.Json.JsonConvert.SerializeObject(item));
@@ -76,7 +76,7 @@ namespace spottr.Droid
 
         void Refresher_Refresh(object sender, EventArgs e)
         {
-            ViewModel.LoadItemsCommand.Execute(null);
+            ViewModel.LoadLocationsCommand.Execute(null);
             refresher.Refreshing = false;
         }
 
@@ -88,15 +88,15 @@ namespace spottr.Droid
 
     class BrowseItemsAdapter : BaseRecycleViewAdapter
     {
-        ItemsViewModel viewModel;
+        LocationsViewModel viewModel;
         Activity activity;
 
-        public BrowseItemsAdapter(Activity activity, ItemsViewModel viewModel)
+        public BrowseItemsAdapter(Activity activity, LocationsViewModel viewModel)
         {
             this.viewModel = viewModel;
             this.activity = activity;
 
-            this.viewModel.Items.CollectionChanged += (sender, args) =>
+            this.viewModel.Locations.CollectionChanged += (sender, args) =>
             {
                 this.activity.RunOnUiThread(NotifyDataSetChanged);
             };
@@ -117,15 +117,15 @@ namespace spottr.Droid
         // Replace the contents of a view (invoked by the layout manager)
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            var item = viewModel.Items[position];
+            var location = viewModel.Locations[position];
 
             // Replace the contents of the view with that element
             var myHolder = holder as MyViewHolder;
-            myHolder.TextView.Text = item.Text;
-            myHolder.DetailTextView.Text = item.Description;
+            myHolder.TextView.Text = location.Name;
+            myHolder.DetailTextView.Text = location.Description;
         }
 
-        public override int ItemCount => viewModel.Items.Count;
+        public override int ItemCount => viewModel.Locations.Count;
     }
 
     public class MyViewHolder : RecyclerView.ViewHolder

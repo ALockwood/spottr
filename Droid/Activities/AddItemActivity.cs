@@ -13,7 +13,7 @@ namespace spottr.Droid
         FloatingActionButton saveButton;
         EditText title, description;
 
-        public ItemsViewModel ViewModel { get; set; }
+        public LocationsViewModel ViewModel { get; set; }
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -32,12 +32,12 @@ namespace spottr.Droid
 
         void SaveButton_Click(object sender, EventArgs e)
         {
-            var item = new Item
+            var location = new Location
             {
-                Text = title.Text,
+                Name = title.Text,
                 Description = description.Text
             };
-            ViewModel.AddItemCommand.Execute(item);
+            ViewModel.AddLocationsCommand.Execute(location);
 
             Finish();
         }

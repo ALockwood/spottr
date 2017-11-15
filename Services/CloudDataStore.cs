@@ -10,73 +10,73 @@ using Plugin.Connectivity;
 
 namespace spottr
 {
-    public class CloudDataStore : IDataStore<Item>
+    public class CloudDataStore : IDataStore<Location>
     {
         HttpClient client;
-        IEnumerable<Item> items;
+        IEnumerable<Location> locations;
 
         public CloudDataStore()
         {
             client = new HttpClient();
             client.BaseAddress = new Uri($"{App.BackendUrl}/");
 
-            items = new List<Item>();
+            locations = new List<Location>();
         }
 
-        public async Task<IEnumerable<Item>> GetItemsAsync(bool forceRefresh = false)
+        public async Task<IEnumerable<Location>> GetLocationsAsync(bool forceRefresh = false)
         {
             if (forceRefresh && CrossConnectivity.Current.IsConnected)
             {
-                var json = await client.GetStringAsync($"api/item");
-                items = await Task.Run(() => JsonConvert.DeserializeObject<IEnumerable<Item>>(json));
+                var json = await client.GetStringAsync($"api/location");
+                locations = await Task.Run(() => JsonConvert.DeserializeObject<IEnumerable<Location>>(json));
             }
 
-            return items;
+            return locations;
         }
 
-        public async Task<Item> GetItemAsync(string id)
+        public async Task<Location> GetLocationAsync(Int32 locationKey)
         {
-            if (id != null && CrossConnectivity.Current.IsConnected)
+            if (CrossConnectivity.Current.IsConnected)
             {
-                var json = await client.GetStringAsync($"api/item/{id}");
-                return await Task.Run(() => JsonConvert.DeserializeObject<Item>(json));
+                var json = await client.GetStringAsync($"api/location/{locationKey}");
+                return await Task.Run(() => JsonConvert.DeserializeObject<Location>(json));
             }
 
             return null;
         }
 
-        public async Task<bool> AddItemAsync(Item item)
+        public async Task<bool> AddLocationAsync(Location location)
         {
-            if (item == null || !CrossConnectivity.Current.IsConnected)
+            if (location == null || !CrossConnectivity.Current.IsConnected)
                 return false;
 
-            var serializedItem = JsonConvert.SerializeObject(item);
+            var serializedItem = JsonConvert.SerializeObject(location);
 
-            var response = await client.PostAsync($"api/item", new StringContent(serializedItem, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync($"api/location", new StringContent(serializedItem, Encoding.UTF8, "application/json"));
 
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> UpdateItemAsync(Item item)
+        public async Task<bool> UpdateLocationAsync(Location location)
         {
-            if (item == null || item.Id == null || !CrossConnectivity.Current.IsConnected)
+            if (location == null || location.LocationKey == null || !CrossConnectivity.Current.IsConnected)
                 return false;
 
-            var serializedItem = JsonConvert.SerializeObject(item);
+            var serializedItem = JsonConvert.SerializeObject(location);
             var buffer = Encoding.UTF8.GetBytes(serializedItem);
             var byteContent = new ByteArrayContent(buffer);
 
-            var response = await client.PutAsync(new Uri($"api/item/{item.Id}"), byteContent);
+            var response = await client.PutAsync(new Uri($"api/location/{location.LocationKey}"), byteContent);
 
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> DeleteItemAsync(string id)
+        public async Task<bool> DeleteLocationAsync(Int32 locationKey)
         {
-            if (string.IsNullOrEmpty(id) && !CrossConnectivity.Current.IsConnected)
+            if (!CrossConnectivity.Current.IsConnected)
                 return false;
 
-            var response = await client.DeleteAsync($"api/item/{id}");
+            var response = await client.DeleteAsync($"api/location/{locationKey}");
 
             return response.IsSuccessStatusCode;
         }
