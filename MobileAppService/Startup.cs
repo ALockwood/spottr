@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
-using Swashbuckle.AspNetCore.Swagger;
-
-using spottr.Models;
 using spottr.DAL;
+using spottr.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace spottr.MobileAppService
 {
@@ -34,7 +29,7 @@ namespace spottr.MobileAppService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSingleton<ILocationDAL, PostgresLocationDAL>(_ => new PostgresLocationDAL("localhost", "hackathon1", "", ""));
+            services.AddSingleton<ILocationDAL, PostgresLocationDAL>(_ => new PostgresLocationDAL(Environment.GetEnvironmentVariable("HACK_SERVER"), "hackathon_demo", "hackyhack", Environment.GetEnvironmentVariable("HACK_PASSWORD")));
             services.AddSingleton<ILocationRepository, PostgisLocationRepository>();
 
             services.AddSwaggerGen(c =>
