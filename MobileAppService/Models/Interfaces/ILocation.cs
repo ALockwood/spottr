@@ -7,11 +7,11 @@ namespace spottr.Models
         Int32 LocationKey { get; }
         string Name { get; set; }
         string Description { get; set; }
-        string LocationPoint { get; }
+        double Latitude { get; }
+        double Longitude { get; }
         DateTime DateCreated { get; }
         DateTime LastUpdated { get; }
 
-        void SetLocation(string point);
-        //TODO: Add SetLastUpdated?
+        void SetLocationLatitudeAndLongitude(string point); 
     }
 }

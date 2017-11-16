@@ -7,7 +7,7 @@ namespace spottr
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Location> DataStore => ServiceLocator.Instance.Get<IDataStore<Location>>();
+        public IDataStore<LocationPin> DataStore => ServiceLocator.Instance.Get<IDataStore<LocationPin>>();
 
         bool isBusy = false;
         public bool IsBusy

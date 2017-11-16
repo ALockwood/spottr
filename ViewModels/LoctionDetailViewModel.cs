@@ -4,8 +4,8 @@ namespace spottr
 {
     public class LoctionDetailViewModel : BaseViewModel
     {
-        public Location Location { get; set; }
-        public LoctionDetailViewModel(Location location = null)
+        public LocationPin Location { get; set; }
+        public LoctionDetailViewModel(LocationPin location = null)
         {
             if (location != null)
             {

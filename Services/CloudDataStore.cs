@@ -7,57 +7,57 @@ using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 using Plugin.Connectivity;
+using spottr.Models;
 
 namespace spottr
 {
-    public class CloudDataStore : IDataStore<Location>
+    public class CloudDataStore : IDataStore<LocationPin>
     {
         HttpClient client;
-        IEnumerable<Location> locations;
+        IEnumerable<LocationPin> locations;
 
         public CloudDataStore()
         {
             client = new HttpClient();
             client.BaseAddress = new Uri($"{App.BackendUrl}/");
 
-            locations = new List<Location>();
+            locations = new List<LocationPin>();
         }
 
-        public async Task<IEnumerable<Location>> GetLocationsAsync(bool forceRefresh = false)
+        public async Task<IEnumerable<LocationPin>> GetLocationsAsync(bool forceRefresh = false)
         {
             if (forceRefresh && CrossConnectivity.Current.IsConnected)
             {
                 var json = await client.GetStringAsync($"api/location");
-                locations = await Task.Run(() => JsonConvert.DeserializeObject<IEnumerable<Location>>(json));
+                locations = await Task.Run(() => JsonConvert.DeserializeObject<IEnumerable<LocationPin>>(json));
             }
 
             return locations;
         }
 
-        public async Task<Location> GetLocationAsync(Int32 locationKey)
+        public async Task<LocationPin> GetLocationAsync(Int32 locationKey)
         {
             if (CrossConnectivity.Current.IsConnected)
             {
                 var json = await client.GetStringAsync($"api/location/{locationKey}");
-                return await Task.Run(() => JsonConvert.DeserializeObject<Location>(json));
+                return await Task.Run(() => JsonConvert.DeserializeObject<LocationPin>(json));
             }
 
             return null;
         }
 
-        public async Task<bool> AddLocationAsync(Location location)
+        public async Task<bool> AddLocationAsync(LocationPin location)
         {
             if (location == null || !CrossConnectivity.Current.IsConnected)
                 return false;
 
-            var serializedItem = JsonConvert.SerializeObject(location);
-
+            var serializedItem = JsonConvert.SerializeObject(new LocationPinForPosting(location));
             var response = await client.PostAsync($"api/location", new StringContent(serializedItem, Encoding.UTF8, "application/json"));
 
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> UpdateLocationAsync(Location location)
+        public async Task<bool> UpdateLocationAsync(LocationPin location)
         {
             if (location == null || location.LocationKey == null || !CrossConnectivity.Current.IsConnected)
                 return false;

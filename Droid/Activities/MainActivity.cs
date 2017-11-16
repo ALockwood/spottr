@@ -10,10 +10,7 @@ using Android.Support.Design.Widget;
 
 namespace spottr.Droid
 {
-    [Activity(Label = "@string/app_name", Icon = "@mipmap/icon",
-        LaunchMode = LaunchMode.SingleInstance,
-        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
-        ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "@string/app_name", Icon = "@mipmap/icon", LaunchMode = LaunchMode.SingleInstance, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : BaseActivity
     {
         protected override int LayoutResource => Resource.Layout.activity_main;
@@ -47,6 +44,8 @@ namespace spottr.Droid
 
             SupportActionBar.SetDisplayHomeAsUpEnabled(false);
             SupportActionBar.SetHomeButtonEnabled(false);
+
+            Services.GpsApiClient gps = new Services.GpsApiClient(this, false);
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)

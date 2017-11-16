@@ -21,11 +21,11 @@ namespace spottr.Droid
 
             var data = Intent.GetStringExtra("data");
 
-            var location = Newtonsoft.Json.JsonConvert.DeserializeObject<Location>(data);
+            var location = Newtonsoft.Json.JsonConvert.DeserializeObject<LocationPin>(data);
             viewModel = new LoctionDetailViewModel(location);
 
             FindViewById<TextView>(Resource.Id.description).Text = location.Description;
-            FindViewById<TextView>(Resource.Id.lat_long).Text = location.LocationPoint;
+            FindViewById<TextView>(Resource.Id.lat_long).Text = $"Lat: {location.Latitude} Long: {location.Longitude}";
             FindViewById<TextView>(Resource.Id.date_updated).Text = location.LastUpdated;
 
             SupportActionBar.Title = location.Name;

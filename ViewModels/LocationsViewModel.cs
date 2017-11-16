@@ -7,16 +7,16 @@ namespace spottr
 {
     public class LocationsViewModel : BaseViewModel
     {
-        public ObservableCollection<Location> Locations { get; set; }
+        public ObservableCollection<LocationPin> Locations { get; set; }
         public Command LoadLocationsCommand { get; set; }
         public Command AddLocationsCommand { get; set; }
 
         public LocationsViewModel()
         {
             Title = "Browse";
-            Locations = new ObservableCollection<Location>();
+            Locations = new ObservableCollection<LocationPin>();
             LoadLocationsCommand = new Command(async () => await ExecuteLoadLocationsCommand());
-            AddLocationsCommand = new Command<Location>(async (Location location) => await AddLocation(location));
+            AddLocationsCommand = new Command<LocationPin>(async (LocationPin location) => await AddLocation(location));
         }
 
         async Task ExecuteLoadLocationsCommand()
@@ -45,7 +45,7 @@ namespace spottr
             }
         }
 
-        async Task AddLocation(Location location)
+        async Task AddLocation(LocationPin location)
         {
             Locations.Add(location);
             await DataStore.AddLocationAsync(location);

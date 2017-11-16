@@ -1,4 +1,5 @@
 ﻿using System;
+using spottr.Services;
 
 namespace spottr
 {
@@ -8,7 +9,7 @@ namespace spottr
 
         public static void Initialize()
         {
-            ServiceLocator.Instance.Register<IDataStore<Location>, CloudDataStore>();
+            ServiceLocator.Instance.Register<IDataStore<LocationPin>, CloudDataStore>();
         }
     }
 }
